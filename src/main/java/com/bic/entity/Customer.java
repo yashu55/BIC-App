@@ -42,4 +42,7 @@ public class Customer {
 
     @Column(nullable = false, columnDefinition = "varchar(10)")
     private String contactNumber2;
+
+    @Column(nullable = false)
+    private boolean isActive;
 }

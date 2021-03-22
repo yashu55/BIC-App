@@ -2,6 +2,8 @@ package com.bic.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,6 +33,7 @@ public class Cylinder {
     @Column(columnDefinition = "float(5,2)", nullable = false)
     private double cylinderCapacity;
 
-    @Column(columnDefinition = "varchar(3)", nullable = false)
-    private String cylinderUnit;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('KG', 'LIT')", nullable = false)
+    private CylinderUnit cylinderUnit;
 }
