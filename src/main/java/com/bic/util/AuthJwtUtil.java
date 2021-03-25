@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,34 +14,35 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
-public class JwtUtil {
+public class AuthJwtUtil {
 
-    private String secret = "yashu";
+    @Value("${app.secret}")
+    private String secret;
 
-    public String extractUsername(String token) {
+    public String extractUsername(String token) throws Exception {
 	return extractClaim(token, Claims::getSubject);
     }
 
-    public Date extractExpiration(String token) {
+    public Date extractExpiration(String token) throws Exception {
 	return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws Exception {
 	final Claims claims = extractAllClaims(token);
 	return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws Exception {
 	return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    private Boolean isTokenExpired(String token) throws Exception {
 	return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(UserDetails userDetails) {
 	Map<String, Object> claims = new HashMap<>();
-	return createToken(claims, username);
+	return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -50,7 +52,7 @@ public class JwtUtil {
 		.signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) throws Exception {
 	final String username = extractUsername(token);
 	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

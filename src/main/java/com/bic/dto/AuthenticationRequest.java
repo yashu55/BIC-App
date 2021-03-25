@@ -1,13 +1,14 @@
 package com.bic.dto;
 
-public class AuthenticationRequest {
+import java.io.Serializable;
 
+public class AuthenticationRequest implements Serializable {
+
+    private static final long serialVersionUID = -502703236534477933L;
     private String userName;
     private String password;
 
     public AuthenticationRequest() {
-	super();
-	// TODO Auto-generated constructor stub
     }
 
     public AuthenticationRequest(String userName, String password) {
