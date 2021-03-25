@@ -22,7 +22,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int customerId;
 
-    @Column(nullable = false, columnDefinition = "varchar(30)")
+    @Column(nullable = false, columnDefinition = "varchar(30)", unique = true)
     private String customerName;
 
     @Column(nullable = false, columnDefinition = "varchar(200)")
